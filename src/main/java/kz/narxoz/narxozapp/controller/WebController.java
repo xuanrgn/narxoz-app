@@ -5,10 +5,7 @@ import kz.narxoz.narxozapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,14 +16,31 @@ public class WebController {
     UserRepository repository;
 
     @GetMapping("/")
-    public String showUserList(Model model) {
-        List<User> users = repository.findAll();
+    public String showUserList(@RequestParam(name = "email", required = false, defaultValue = "") String email,
+                               @RequestParam(name = "name", required = false, defaultValue = "") String name,
+                               @RequestParam(name = "id", required = false, defaultValue = "") Long id,
+                               Model model) {
+
+        List<User> users = repository.findAllSorted();
+
+        if (!email.isEmpty()) {
+            users = repository.findByEmailContainingOrderByNameDesc(email);
+        }
+
+        if (!name.isEmpty()) {
+            users = repository.findByNameStartsWith(name);
+        }
+
+        if (id != null) {
+            users = repository.findByGreaterId(id);
+        }
+
         model.addAttribute("users", users);
         return "index";
     }
 
     @PostMapping("/adduser")
-    public String createUser(@ModelAttribute User user){
+    public String createUser(@ModelAttribute User user) {
         addUser(user);
         return "redirect:/";
     }
@@ -56,7 +70,7 @@ public class WebController {
     }
 
     private void deleteById(long id) {
-       repository.deleteById(id);
+        repository.deleteById(id);
     }
 
     private void addUser(User newUser) {
