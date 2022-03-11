@@ -15,24 +15,37 @@ public class WebController {
     @Autowired
     UserRepository repository;
 
-    @GetMapping("/")
+    @GetMapping("")
     public String showUserList(@RequestParam(name = "email", required = false, defaultValue = "") String email,
                                @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                               @RequestParam(name = "id", required = false, defaultValue = "") Long id,
+                               @RequestParam(name = "firstName", required = false, defaultValue = "") String firstName,
+                               @RequestParam(name = "lastName", required = false, defaultValue = "") String lastName,
+                               @RequestParam(name = "qid", required = false, defaultValue = "") Long qid,
+                               @RequestParam(name = "isSorted", required = false) boolean isSorted,
                                Model model) {
 
-        List<User> users = repository.findAllSorted();
+        List<User> users = repository.findAll();
+
+        // Check if `param` is not empty
 
         if (!email.isEmpty()) {
-            users = repository.findByEmailContainingOrderByNameDesc(email);
+            users = repository.findFirstByEmailContainingOrderBySurname(email);
         }
 
-        if (!name.isEmpty()) {
-            users = repository.findByNameStartsWith(name);
+        else if (!firstName.isEmpty() && !lastName.isEmpty()) {
+            users = repository.findByNameAndSurname(firstName, lastName);
         }
 
-        if (id != null) {
-            users = repository.findByGreaterId(id);
+        else if (!name.isEmpty()) {
+            users = repository.findTop2ByNameStartsWith(name);
+        }
+
+        else if (qid != null) {
+            users = repository.findByGreaterId(qid);
+        }
+
+        else if (isSorted) {
+            users = repository.findAllSorted();
         }
 
         model.addAttribute("users", users);
