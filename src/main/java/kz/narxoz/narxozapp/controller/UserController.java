@@ -1,8 +1,6 @@
 package kz.narxoz.narxozapp.controller;
 
-import kz.narxoz.narxozapp.model.Book;
 import kz.narxoz.narxozapp.model.User;
-import kz.narxoz.narxozapp.repository.BookRepository;
 import kz.narxoz.narxozapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,4 +18,5 @@ public class UserController {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
 }
