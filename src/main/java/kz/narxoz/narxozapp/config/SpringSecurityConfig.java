@@ -31,6 +31,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance())
                 .withUser("user").password("userPW").roles("USER")
                 .and()
-                .withUser("book").password("bookPW").roles("BOOK");
+                .withUser("book").password("bookPW").roles("BOOK", "USER");
     }
 }
