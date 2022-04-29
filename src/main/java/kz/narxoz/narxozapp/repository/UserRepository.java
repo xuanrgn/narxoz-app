@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    User findByUsername(String username);
+
     /** Jpa Methods */
 
     // find top 2 users where name starts with `name`

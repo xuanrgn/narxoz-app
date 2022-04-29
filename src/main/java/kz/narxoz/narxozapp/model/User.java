@@ -27,6 +27,13 @@ public class User {
 
     private String email;
 
+    private String username;
+
+    private String password;
+
+    @Transient
+    private String passwordConfirm;
+
     @ManyToMany
     private Set<Role> roles;
 
